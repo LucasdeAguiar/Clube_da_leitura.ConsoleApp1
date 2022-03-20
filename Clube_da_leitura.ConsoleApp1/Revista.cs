@@ -15,7 +15,7 @@ namespace Clube_da_leitura.ConsoleApp1
         public int ano_revista;
         public Boolean esta_emprestada = false;
         public Caixa caixa_utilizada =  new Caixa();
-        
+        public Categoria categoria;
 
         //Métodos
 
@@ -38,6 +38,11 @@ namespace Clube_da_leitura.ConsoleApp1
             tipo = "DC";
             numero_edicao = "1";
             ano_revista = 1990;
+            Categoria categoria_exemplo = new Categoria();
+            categoria_exemplo.nome = "super heroi";
+           
+            categoria_exemplo.dias_de_emprestimo = 2;
+            this.categoria = categoria_exemplo;
            
         }
         public void mostraRevista()
@@ -46,7 +51,8 @@ namespace Clube_da_leitura.ConsoleApp1
             Console.WriteLine("Tipo: " + tipo);
             Console.WriteLine("Número da edição: " + numero_edicao);
             Console.WriteLine("Ano da revista: " + ano_revista);
-          
+            Console.WriteLine("Categoria: " + categoria.nome);
+            Console.WriteLine("Dias de empréstimo: " + categoria.dias_de_emprestimo);
         }
     }
 }

@@ -19,13 +19,17 @@ namespace Clube_da_leitura.ConsoleApp1
         public int contadorRevistas = 0;
         public int contadorAmigos = 0;
         public int contadorCaixas = 0;
+        public int contadorReservas = 0;
+        public int contadorCategorias = 0;
         #endregion
 
         #region arrays
-        public Revista[] revistas = new Revista[10];
-        public Amigo[] amigos = new Amigo[10];
-        public Emprestimo[] filaEmprestimo = new Emprestimo[10];
-        public Caixa[] caixas = new Caixa[10];
+        public Revista[] revistas = new Revista[100];
+        public Amigo[] amigos = new Amigo[100];
+        public Emprestimo[] filaEmprestimo = new Emprestimo[100];
+        public Caixa[] caixas = new Caixa[100];
+        public Reserva[] reservas = new Reserva[100];
+        public Categoria[] categorias = new Categoria[100];
         Emprestimo emp1 = new Emprestimo();
         #endregion
 
@@ -78,7 +82,9 @@ namespace Clube_da_leitura.ConsoleApp1
         {
             Revista rev1 = new Revista();
             rev1.registraValoresTeste();
-           
+            rev1.categoria.nome = "super heroi";
+            rev1.categoria.dias_de_emprestimo = 2;
+
             revistas[0] = rev1;
             contadorRevistas++;
 
@@ -87,10 +93,27 @@ namespace Clube_da_leitura.ConsoleApp1
             rev2.nome = "Spider Man";
             rev2.tipo = "Marvel";
             rev2.ano_revista = 2004;
+            rev2.categoria.nome = "super heroi";
+            rev2.categoria.dias_de_emprestimo = 2;
             revistas[1] = rev2;
             contadorRevistas++;
         }
 
+        public void iniciaValoresCategorias()
+        {
+            Categoria categoria1 = new Categoria();
+            categoria1.nome = "super heroi";
+            categoria1.dias_de_emprestimo = 5;
+            categorias[contadorCategorias] = categoria1;
+            contadorCategorias++;
+            
+
+            Categoria categoria2 =  new Categoria();
+            categoria2.nome = "revista velha";
+            categoria2.dias_de_emprestimo = 12;
+            categorias[contadorCategorias] = categoria2;
+            contadorCategorias++;
+        }
         public void iniciaValoresAmigos()
         {
             Amigo amigo1 = new Amigo();
@@ -112,6 +135,18 @@ namespace Clube_da_leitura.ConsoleApp1
             amigo3.nome_responsavel = "Thomas";
             amigos[2] = amigo3;
             contadorAmigos++;
+        }
+
+        public void iniciaValoresReservas()
+        {
+                Reserva reserva = new Reserva();
+                reserva.amigo_reservado = amigos[0].nome;
+                reserva.revista_Reservada = revistas[0].nome;
+
+                reservas[0] = reserva;
+                contadorReservas++;
+
+            
         }
 
         #endregion
@@ -143,6 +178,102 @@ namespace Clube_da_leitura.ConsoleApp1
 
                 }
             }
+        }
+
+        public Categoria escolhaCategoria()
+        {
+            Categoria categoria = new Categoria();
+            bool achouCategoria = false;
+            limpaTela();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            Console.WriteLine("OPÇÕES DE CATEGORIAS:");
+            for (int i = 0; i < contadorCategorias; i++)
+            {
+                
+                categorias[i].mostrarCategoria();
+                Console.WriteLine("\n");
+            }
+            resetaCor();
+            Console.WriteLine("\n");
+            Console.WriteLine("Digite o nome da categoria da revista");
+             String nomeCategoria = Console.ReadLine();
+
+            limpaTela();
+            for (int i=0; i< contadorCategorias;i++)
+            {
+                if (categorias[i].nome == nomeCategoria)
+                {
+                    achouCategoria = true;
+                }
+            }
+            if (achouCategoria)
+            {
+                categoria.nome = nomeCategoria;
+            }
+
+            Console.WriteLine("Digite a quantidade de dias de empréstimo");
+            int dias_emprestimo = Convert.ToInt32(Console.ReadLine());
+
+            categoria.dias_de_emprestimo = dias_emprestimo;
+
+            return categoria;
+
+        }
+        public int escolhaPrazoCategoria()
+        {
+            Console.WriteLine("Digite os dias de empréstimo: ");
+             int dias_emprestimo = Convert.ToInt32(Console.ReadLine());
+
+            return dias_emprestimo;
+        }
+
+        public void verificaReserva()
+        {
+            Boolean amigoExiste = false;
+            Boolean revistaExiste = false;
+
+            Console.WriteLine("Digite o amigo que realizará a reserva:");
+             string amigo = Console.ReadLine();
+
+            Console.WriteLine("Digite o nome da revista que será reservada:");
+            string revista = Console.ReadLine();
+
+            for (int i=0; i<contadorAmigos;i++)
+            {
+                if (amigos[i].nome == amigo)
+                {
+                    amigoExiste = true;
+                }
+            }
+
+            for (int i=0; i<contadorRevistas;i++)
+            {
+                if (revistas[i].nome == revista)
+                {
+                    revistaExiste = true;
+                }
+            }
+
+            if (amigoExiste == true && revistaExiste == true)
+            {
+                    Reserva reserva = new Reserva();
+                    reserva.add2dias();
+                    reserva.amigo_reservado = amigo;
+                    reserva.revista_Reservada = revista;
+                    reservas[contadorReservas] = reserva;
+                    contadorReservas++;
+                
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Dados Incorretos..");
+                apertaEnter();
+                resetaCor();
+                
+            }
+
         }
     
         public void emprestaRevista()
@@ -319,6 +450,8 @@ namespace Clube_da_leitura.ConsoleApp1
                 Console.WriteLine("Opção 2: Ir para o menu de caixas");
                 Console.WriteLine("Opção 3: Ir para o menu de amigos");
                 Console.WriteLine("Opção 4: Ir para o menu de empréstimos");
+                Console.WriteLine("Opção 5: Ir para o menu de reservas");
+                Console.WriteLine("Opção 6: Ir para o menu de categorias");
                 Console.WriteLine("Digite s para sair do programa:");
                 opcao = Console.ReadLine();
 
@@ -355,7 +488,17 @@ namespace Clube_da_leitura.ConsoleApp1
                     limpaTela();
                     menuEmprestimo();
                 }
-            } while (opcao != "1" && opcao != "2" && opcao != "3" && opcao != "4" && opcao != "s");
+                else if (opcao == "5")
+                {
+                    limpaTela();
+                    menuReserva();
+                }
+                else if (opcao == "6")
+                {
+                    limpaTela();
+                    menuCategoria();
+                }
+            } while (opcao != "1" && opcao != "2" && opcao != "3" && opcao != "4" && opcao != "5" && opcao != "s");
         }
         public void menuRevista()
         {
@@ -378,6 +521,12 @@ namespace Clube_da_leitura.ConsoleApp1
                 Revista rev = new Revista();
                 rev.registraRevista();
                 escolhaCaixa(rev.nome);
+                Categoria categoria = new Categoria();
+                categoria = escolhaCategoria();
+                rev.categoria = categoria;
+                contadorCategorias++;
+               
+              
 
                 revistas[contadorRevistas] = rev;
                 contadorRevistas++;
@@ -539,8 +688,8 @@ namespace Clube_da_leitura.ConsoleApp1
                 {
                     Console.WriteLine("Amigo: " + filaEmprestimo[i].amigo.nome);
                     Console.WriteLine("Revista: " + filaEmprestimo[i].revista.nome);
-                    Console.WriteLine("Data do empréstimo: " + filaEmprestimo[i].data_emprestimo);
-                    Console.WriteLine("Data de devolução: " + filaEmprestimo[i].data_devolucao);
+                    Console.WriteLine("Data do empréstimo: " + filaEmprestimo[i].data_emprestimo.ToShortDateString());
+                    Console.WriteLine("Data de devolução: " + filaEmprestimo[i].data_devolucao.ToShortDateString());
                     Console.WriteLine("-------------------------");
                     Console.WriteLine("\n");
                 }
@@ -554,7 +703,92 @@ namespace Clube_da_leitura.ConsoleApp1
                 iniciaMenu();
             } 
         }
+        public void menuReserva()
+        {
+            string opcao;
 
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("      CLUBE DA LEITURA");
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("Digite uma das opções:");
+            Console.WriteLine("Opção 1: Registrar Reserva");
+            Console.WriteLine("Opção 2: Visualizar Reservas");
+            Console.WriteLine("Opção 3: Ir para o menu de registro de empréstimos:");
+            Console.WriteLine("Opção 4: Voltar para o Menu");
+            opcao = Console.ReadLine();
+
+            if (opcao == "1")
+            {
+                limpaTela();
+                verificaReserva();
+                limpaTela();
+                menuReserva();
+
+            }
+            else if (opcao == "2")
+            {
+                limpaTela();
+                for (int i = 0; i < contadorReservas; i++)
+                {
+                    reservas[i].mostraReserva();
+                }
+                apertaEnter();
+                menuReserva();
+
+            }
+            else if (opcao == "3")
+            {
+                limpaTela();
+                menuEmprestimo();
+            }
+            else if (opcao == "4")
+            {
+                limpaTela();
+                iniciaMenu();
+            }
+
+        }
+        public void menuCategoria()
+        {
+            string opcao;
+
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("      CLUBE DA LEITURA");
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("Digite uma das opções:");
+            Console.WriteLine("Opção 1: Registrar Categoria");
+            Console.WriteLine("Opção 2: Visualizar Categorias");
+            Console.WriteLine("Opção 3: Voltar para o Menu");
+            opcao = Console.ReadLine();
+
+            if (opcao == "1")
+            {
+                limpaTela();
+                Categoria cat = new Categoria();
+                cat.registraCategoria();
+                categorias[contadorCategorias] = cat;
+                contadorCategorias++;
+                limpaTela();
+                menuCategoria();
+            }
+            else if (opcao == "2")
+            {
+                limpaTela();
+                for(int i = 0;i < contadorCategorias; i++)
+                {
+                    categorias[i].mostrarCategoria();
+                }
+                apertaEnter();
+                limpaTela();
+                menuCategoria();
+            }
+            else if (opcao == "3")
+            {
+                limpaTela();
+                iniciaMenu();
+            }
+           
+        }
         #endregion
 
         #region auxiliadores

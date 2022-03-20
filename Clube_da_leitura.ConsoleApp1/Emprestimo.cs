@@ -47,8 +47,8 @@ namespace Clube_da_leitura.ConsoleApp1
             amigo.mostraAmigo();
             revista.mostraRevista();
 
-            Console.WriteLine("Data de emprestimo: " + data_emprestimo);
-            Console.WriteLine("Data de devolução: " + data_devolucao);
+            Console.WriteLine("Data de emprestimo: " + data_emprestimo.ToShortTimeString());
+            Console.WriteLine("Data de devolução: " + data_devolucao.ToShortDateString());
             Console.WriteLine("\n");
             
 
